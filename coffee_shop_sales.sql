@@ -67,7 +67,7 @@ GROUP BY
 ORDER BY
 	MONTH(transaction_date);
     
-
+-- Total orders for May
 SELECT COUNT(transaction_id) AS Total_Orders
 FROM coffee_shop_sales
 WHERE
@@ -91,11 +91,13 @@ ORDER BY
     MONTH(transaction_date);
 
 
+-- Total quantity sold in May
 SELECT SUM(transaction_qty) AS total_quantity_sold
 FROM coffee_shop_sales
 WHERE 
 MONTH(transaction_date) = 5 -- Month of May
 
+-- TOTAL QUANTITY SOLD KPI - MOM DIFFERENCE AND MOM GROWTH
 SELECT
 	MONTH(transaction_date) AS month,
     ROUND(SUM(transaction_qty)) AS total_quantity_sold,
@@ -110,8 +112,10 @@ GROUP BY
 	MONTH(transaction_date)
 ORDER BY
 	MONTH(transaction_date);
-    
 
+
+-- DAILY SALES ANALYSIS
+-- Daily summary for May 18th (formatted in thousands) 
 
 SELECT * FROM coffee_shop_sales;
 
@@ -124,9 +128,11 @@ FROM
 WHERE 
     transaction_date = '2023-05-18'; -- For 18 May 2023
 
+
 -- Weekend : SAT and SUN
 -- Weekdays : MON to FRI
 
+-- Compare weekend vs weekday sales in May
 SELECT
 	CASE WHEN DAYOFWEEK(transaction_date) IN (1,7) THEN 'Weekends'
     ELSE 'Weekdays'
@@ -136,8 +142,8 @@ FROM coffee_shop_sales
 WHERE MONTH(transaction_date) = 5 -- May
 GROUP BY 
 	day_type
-    
-    
+
+-- Sales by store location in May
 SELECT  
 	store_location,
     CONCAT(ROUND(SUM(unit_price * transaction_qty) /1000, 2), 'K') AS Total_sales
@@ -146,6 +152,7 @@ WHERE MONTH(transaction_date) = 5 -- May
 GROUP BY store_location 
 ORDER BY total_sales DESC
 
+-- Average daily sales in May
 SELECT 
 	CONCAT(ROUND(AVG(total_sales)/1000, 1), 'K') AS Avg_Sales
 FROM
@@ -155,7 +162,7 @@ FROM
     WHERE MONTH(transaction_date) = 5
     GROUP BY transaction_date
     ) AS Internal_query
-    
+
 SELECT
 	DAY(transaction_date) AS day_of_month,
     SUM(unit_price * transaction_qty) AS total_sales
@@ -164,9 +171,8 @@ WHERE MONTH (transaction_date) = 5
 GROUP BY DAY(transaction_date)
 ORDER BY DAY(transaction_date)
 
-
 -- COMPARING DAILY SALES WITH AVERAGE SALES – IF GREATER THAN “ABOVE AVERAGE” and LESSER THAN “BELOW AVERAGE”
-
+-- Daily sales compared to monthly average
 SELECT 
     day_of_month,
     CASE 
@@ -190,7 +196,8 @@ FROM (
 ORDER BY 
     day_of_month;
 
-
+-- PRODUCT PERFORMANCE
+-- Sales by product category in May
 SELECT 
 	product_category,
 	ROUND(SUM(unit_price * transaction_qty),1) as Total_Sales
@@ -199,6 +206,7 @@ WHERE MONTH(transaction_date) = 5
 GROUP BY product_category
 ORDER BY SUM(unit_price * transaction_qty) DESC
 
+-- SPECIFIC TIME ANALYSIS (Tuesday at 8 AM)
 SELECT 
     ROUND(SUM(unit_price * transaction_qty)) AS Total_Sales,
     SUM(transaction_qty) AS Total_Quantity,
@@ -210,7 +218,8 @@ WHERE
     AND HOUR(transaction_time) = 8 -- Filter for hour number 8
     AND MONTH(transaction_date) = 5; -- Filter for May (month number 5)
 
-
+-- TIME-BASED ANALYSIS
+-- Sales by hour of day in May
 SELECT 
     HOUR(transaction_time) AS Hour_of_Day,
     ROUND(SUM(unit_price * transaction_qty)) AS Total_Sales
