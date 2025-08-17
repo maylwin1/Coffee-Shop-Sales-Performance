@@ -1,35 +1,49 @@
+-- Create the database for coffee shop sales
 CREATE DATABASE coffee_shop_sales_db
 
+-- Create a backup table with the same structure as original
 CREATE TABLE coffee_shop_sales_backup
 LIKE coffee_shop_sales;
 
 SELECT * FROM coffee_shop_sales_backup;
 
+-- Copy all data from original table to backup
 INSERT coffee_shop_sales_backup
 SELECT * FROM coffee_shop_sales;
 
 
+-- DATA EXPLORATION AND CLEANING
 
-
+-- View all sales data
 SELECT * FROM coffee_shop_sales;
 
+-- Check table structure
 DESCRIBE coffee_shop_sales
 
+-- Convert transaction_date from string to proper DATE format
 UPDATE coffee_shop_sales
 SET transaction_date = STR_TO_DATE(transaction_date, '%m/%d/%Y');
 
-ALTER TABLE coffee_shop_sales
+-- Change column type to DATE after conversion
+ALTER TABLE coffee_shop_sales		
 MODIFY COLUMN transaction_date DATE;
 
+-- Convert transaction_time from string to TIME format
 UPDATE coffee_shop_sales
 SET transaction_time = STR_TO_DATE(transaction_time, '%H:%i:%s');
 
+-- Convert transaction_time from string to TIME format
 ALTER TABLE coffee_shop_sales
 MODIFY COLUMN transaction_date TIME;
 
+-- Fix column name
 ALTER TABLE coffee_shop_sales
 CHANGE COLUMN ï»¿transaction_id transaction_id INT;
 
+
+-- KEY PERFORMANCE INDICATORS (KPIs)
+
+-- Total sales for May
 SELECT ROUND(SUM(unit_price * transaction_qty),2) AS Total_Sales
 FROM coffee_shop_sales
 WHERE
