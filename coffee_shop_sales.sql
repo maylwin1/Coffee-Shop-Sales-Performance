@@ -163,6 +163,7 @@ FROM
     GROUP BY transaction_date
     ) AS Internal_query
 
+-- Total sales by day for the month of May
 SELECT
 	DAY(transaction_date) AS day_of_month,
     SUM(unit_price * transaction_qty) AS total_sales
